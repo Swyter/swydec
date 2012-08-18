@@ -24,20 +24,18 @@ end
     for y=1,op do -->for opcode
       local   opcode=tonumber(opcode_arr[gg])
       local param_no=tonumber(opcode_arr[gg+1])
+      local params=""
       
       if param_no > 0 then
-      local params=""
         for ll=1, param_no do
           params=params..", "..opcode_arr[gg+1+ll]
         end
-      else
-      local params=false
       end
         
       if opcode==3 or opcode==5 then wh=wh-2
      end
         
-      out:write((" "):rep(wh).."("..opcode..(not params and params or "" )..")\n")
+      out:write((" "):rep(wh).."("..opcode..(params)..")\n")
 
       if opcode==4 or opcode==6 or opcode==7 or opcode==11 or opcode==12 or opcode==5 then wh=wh+2
      end
