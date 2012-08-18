@@ -2,40 +2,17 @@ local bit=require("bit")
 local opc=require("op")
 swydec = {}
 
- --[[
-out:close()
-
-0x80000000="neg",
-0x40000000="this_or_next",
-lt           = neg | ge
-neq          = neg | eq
-le           = neg | gt
-
-]]
 function printflags(o)
-local bor=bit.bor
-local band=bit.band
-local bxor=bit.bxor
-local abs=math.abs
-local flag=""
-
-local          neg=0x80000000
-local this_or_next=0x40000000
-
-local  lt= bor(neg,30)
-local neq= bor(neg,31)
-local  le= bor(neg,32)
-
- --print("---")
+  local bor,band,bxor=bit.bor,bit.band,bit.bxor
+  local abs,flag=math.abs,""
+  
+  local          neg=0x80000000
+  local this_or_next=0x40000000
  
- --print("orig",string.format("%x",o))
- 
- 
- if abs(tonumber(band(o,neg)))==neg then
+ if abs(band(o,neg))==neg then
   flag="neg|"..flag
   o=abs(bxor(o,neg))
  end
- 
  
  if abs(band(o,this_or_next))==this_or_next then
   flag="this_or_next|"..flag
@@ -96,3 +73,5 @@ end
   end
  
  end
+ 
+ out:close()
