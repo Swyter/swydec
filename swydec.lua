@@ -1,5 +1,55 @@
 local bit=require("bit")
+local opc=require("op")
 swydec = {}
+
+ --[[
+out:close()
+
+0x80000000="neg",
+0x40000000="this_or_next",
+lt           = neg | ge
+neq          = neg | eq
+le           = neg | gt
+
+]]
+function printflags(o)
+local bor=bit.bor
+local band=bit.band
+local bxor=bit.bxor
+local abs=math.abs
+local flag=""
+
+local          neg=0x80000000
+local this_or_next=0x40000000
+
+local  lt= bor(neg,30)
+local neq= bor(neg,31)
+local  le= bor(neg,32)
+
+ --print("---")
+ 
+ --print("orig",string.format("%x",o))
+ 
+ 
+ if abs(tonumber(band(o,neg)))==neg then
+  flag="neg|"..flag
+  o=abs(bxor(o,neg))
+ end
+ 
+ 
+ if abs(band(o,this_or_next))==this_or_next then
+  flag="this_or_next|"..flag
+  o=abs(bxor(o,this_or_next))
+ end
+  
+ local final=flag..opc[o] or o
+ 
+ final=final:gsub("neg|ge","lt")
+ final=final:gsub("neg|eq","neq")
+ final=final:gsub("neg|gt","le")
+ 
+ return final
+end
 
 local filename = "R:\\Juegos\\swconquest\\modules\\swconquest\\scripts.txt"
 local out = io.open("scripts.py","w")
@@ -34,8 +84,9 @@ end
         
       if opcode==3 or opcode==5 then wh=wh-2
      end
-        
-      out:write((" "):rep(wh).."("..opcode..(params)..")\n")
+     
+      local opcode_t=opc[opcode] or printflags(opcode)
+      out:write((" "):rep(wh).."("..opcode_t..(params)..")\n")
 
       if opcode==4 or opcode==6 or opcode==7 or opcode==11 or opcode==12 or opcode==5 then wh=wh+2
      end
@@ -45,4 +96,3 @@ end
   end
  
  end
-out:close()
