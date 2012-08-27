@@ -4,10 +4,6 @@ local ffi=require("ffi")
 local x = os.clock()
 swydec = {}
 
-
- -- print(1224979098644774924LL,1224979098644774912LL)
- -- print(ffi.new("int64_t",1224979098644774924)-1224979098644774912LL)
-  
 function printflags(o)
   local bor,band,bxor=bit.bor,bit.band,bit.bxor
   local abs,flag=math.abs,""
@@ -35,57 +31,32 @@ function printflags(o)
 end
 function printparam(p)
   local bor,band,bxor,lshift=bit.bor,bit.band,bit.bxor,bit.lshift
-  local abs,flag=math.abs,""
   local op_bits = 24 + 32
   
-  local  reg=72057594037927936 --lshift(1, op_bits)
-  local  var=lshift(2, op_bits) --144115188075855872
-  local  qst=lshift(7, op_bits) --504403158265495552
-  local lvar=1100000000000000   --1224979098644774912 --lshift(17,op_bits)
-  local qstr=lshift(22,op_bits) --1585267068834414592
+  local  reg=  '72057594037927936' --lshift(1, op_bits)
+  local  var= '144115188075855872' --lshift(2, op_bits)
+  local  qst= '504403158265495552' --lshift(7, op_bits)
+  local lvar='1224979098644774912' --lshift(17,op_bits)
+  local qstr='1585267068834414592' --lshift(22,op_bits)
  
- function dolong(a,b)
-  print(string.format("local tty=%sLL-%sLL",a,b))
-  print(tty)
- end
-  
-  --print(string.format("0x1100000000000000 \n0x%x",lvar))
-  --print(p)
-  --print(bit.tobit(p))
-  
   local gg=""
   local head=tostring(p):sub(1,5)
   
-      if head=="14411" then
-    gg="'$gvar_"..(p:sub(-6)-("144115188075855872"):sub(-6)).."'"--.."'||"..p
-  elseif head=="50440" then
-    gg="'quest_"..(p:sub(-6)-("504403158265495552"):sub(-6)).."'"--.."'||"..p
-  elseif head=="12249" then
-    gg="':lvar_"..(p:sub(-6)-("1224979098644774912"):sub(-6)).."'"--.."'||"..p
-  elseif head=="15852" then
-    gg="'@qstr_"..(p:sub(-6)-("1585267068834414592"):sub(-6)).."'"--.."'||"..p
+      if head==reg:sub(1,5) then
+    gg="reg"..    (p:sub(-6)-(reg):sub(-6))
+  elseif head==var:sub(1,5) then
+    gg="'$gvar_"..(p:sub(-6)-(var):sub(-6)).."'"
+  elseif head==qst:sub(1,5) then
+    gg="'quest_"..(p:sub(-6)-(qst):sub(-6)).."'"
+  elseif head==lvar:sub(1,5) then
+    gg="':lvar_"..(p:sub(-6)-(lvar):sub(-6)).."'"
+  elseif head==qstr:sub(1,5) then
+    gg="'@qstr_"..(p:sub(-6)-(qstr):sub(-6)).."'"
   else
     gg=p
   end
   
   return gg
-  
-  --for t=1,20,10 do
-  --string.sub(-2,-2)
-  --  band(,0x1100000000000000)
-  --end
-  
- --    if abs(band(p,reg))==reg then
- -- p="reg"..abs(bxor(p,reg))
- --elseif abs(band(p,var))==var then
- --  p="_var_"..abs(bxor(p,var))
- --  print(p,"..")
- --elseif abs(band(p,lvar))==lvar then
- --  p="_lvar_"..abs(bxor(p,lvar))
- --  print(p,"..")
- --end
-  
- -- return (abs(tonumber(p))-1224979098644774912)
 end
 local filename = {"R:\\Juegos\\swconquest\\modules\\swconquest\\scripts.txt",
                   "R:\\Juegos\\swconquest\\modules\\native\\scripts.txt",
