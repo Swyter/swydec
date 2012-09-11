@@ -35,23 +35,27 @@ function printparam(p)
   
   local  reg=  '72057594037927936' --lshift(1, op_bits)
   local  var= '144115188075855872' --lshift(2, op_bits)
+  local  str= '216172782113783808' --lshift(3, op_bits)
   local  qst= '504403158265495552' --lshift(7, op_bits)
   local lvar='1224979098644774912' --lshift(17,op_bits)
   local qstr='1585267068834414592' --lshift(22,op_bits)
  
-  local gg=""
-  local head=tostring(p):sub(1,5)
+  local gg,p="",tostring(p)
+  local head=p:sub(1,5)
+  local tail=p:sub(-6)
   
       if head==reg:sub(1,5) then
-    gg="reg"..    (p:sub(-6)-(reg):sub(-6))
+    gg="reg"    ..( tail- (reg):sub(-6) )
   elseif head==var:sub(1,5) then
-    gg="'$gvar_"..(p:sub(-6)-(var):sub(-6)).."'"
+    gg="'$gvar_"..( tail- (var):sub(-6) ).."'"
+  elseif head==str:sub(1,5) then
+    gg="'str_"  ..( tail- (str):sub(-6) ).."'"
   elseif head==qst:sub(1,5) then
-    gg="'quest_"..(p:sub(-6)-(qst):sub(-6)).."'"
+    gg="'quest_"..( tail- (qst):sub(-6) ).."'"
   elseif head==lvar:sub(1,5) then
-    gg="':lvar_"..(p:sub(-6)-(lvar):sub(-6)).."'"
+    gg="':lvar_"..( tail-(lvar):sub(-6) ).."'"
   elseif head==qstr:sub(1,5) then
-    gg="'@qstr_"..(p:sub(-6)-(qstr):sub(-6)).."'"
+    gg="'@qstr_"..( tail-(qstr):sub(-6) ).."'"
   else
     gg=p
   end
@@ -60,9 +64,10 @@ function printparam(p)
 end
 local filename = {"R:\\Juegos\\swconquest\\modules\\swconquest\\scripts.txt",
                   "R:\\Juegos\\swconquest\\modules\\native\\scripts.txt",
-                  "R:\\Juegos\\WB\\Modules\\DawnOfMan_Beta\\scripts.txt"}
+                  "R:\\Juegos\\WB\\Modules\\DawnOfMan_Beta\\scripts.txt",
+                  "X:\\JDownloader\\TLD3\\TLD3.1\\scripts.txt"}
 
-local out = io.open("scripts.py","w")
+local out = io.open(filename[1]:match("([^\\]+)\\scr").."_scripts.py","w")
 local s,raw=0,{}
 for l in io.lines(filename[1]) do
   s=s+1
